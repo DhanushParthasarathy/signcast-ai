@@ -17,7 +17,8 @@ services:
 
   backend:
     build:
-      context: ./backend
+      context: .
+      dockerfile: backend/Dockerfile
     environment:
       DATABASE_URL: postgresql+psycopg://postgres:postgres@postgres:5432/signcast
       REDIS_URL: redis://redis:6379/0

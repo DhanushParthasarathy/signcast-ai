@@ -1,0 +1,14 @@
+.git
+.github
+**/__pycache__
+**/.pytest_cache
+**/.ruff_cache
+**/.next
+**/node_modules
+**/*.pyc
+backend/.env
+frontend/.env
+.env
+.env.production
+backups
+certbot

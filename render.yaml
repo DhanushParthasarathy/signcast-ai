@@ -2,7 +2,8 @@ services:
   - type: web
     name: signcast-ai-backend
     env: docker
-    rootDir: backend
+    rootDir: .
+    dockerfilePath: ./backend/Dockerfile
     plan: starter
     healthCheckPath: /health
     autoDeploy: true

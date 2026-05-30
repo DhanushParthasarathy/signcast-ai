@@ -11,10 +11,13 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && adduser --disabled-password --gecos "" app
 
-COPY pyproject.toml .
+COPY backend/pyproject.toml .
 RUN pip install --no-cache-dir .
 
-COPY app ./app
+COPY backend/app ./app
+COPY backend/tests ./tests
+COPY backend/.env.example ./.env.example
+COPY database/migrations ./database/migrations
 RUN chown -R app:app /app
 
 USER app
