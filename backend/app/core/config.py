@@ -1,7 +1,26 @@
 from functools import lru_cache
 
-from pydantic import AnyHttpUrl, Field
+from pydantic import AnyHttpUrl, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlalchemy.engine.url import make_url
+
+
+def normalize_database_url(value: str) -> str:
+    if not value:
+        raise ValueError("DATABASE_URL is required")
+
+    normalized = value.strip()
+    if normalized.startswith("postgres://"):
+        normalized = normalized.replace("postgres://", "postgresql+psycopg://", 1)
+    elif normalized.startswith("postgresql://"):
+        normalized = normalized.replace("postgresql://", "postgresql+psycopg://", 1)
+
+    try:
+        make_url(normalized)
+    except Exception as exc:
+        raise ValueError(f"Invalid DATABASE_URL: {exc}") from exc
+
+    return normalized
 
 
 class Settings(BaseSettings):
@@ -30,6 +49,11 @@ class Settings(BaseSettings):
     require_production_secrets: bool = True
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+
+    @field_validator("database_url")
+    @classmethod
+    def validate_database_url(cls, value: str) -> str:
+        return normalize_database_url(value)
 
     def validate_production(self) -> None:
         if self.app_env != "production" or not self.require_production_secrets:

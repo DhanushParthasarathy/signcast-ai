@@ -75,7 +75,7 @@ certbot/www
 First certificate issue flow:
 
 1. Point DNS `A` record to the server.
-2. Temporarily run an HTTP-only Nginx config, or use `nginx/conf.d/signcast.local.conf`.
+2. Temporarily run an HTTP-only Nginx config, or render `nginx/templates/signcast.local.conf.template`.
 3. Request a certificate:
 
 ```bash

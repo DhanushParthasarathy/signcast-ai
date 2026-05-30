@@ -50,13 +50,14 @@ services:
     environment:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-signcast}
       REDIS_URL: redis://redis:6379/0
+      PORT: ${PORT:-8000}
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
     expose:
-      - "8000"
+      - "${PORT:-8000}"
     logging:
       driver: json-file
       options:
@@ -90,6 +91,10 @@ services:
   nginx:
     image: nginx:1.27-alpine
     restart: unless-stopped
+    env_file:
+      - ./.env.production
+    environment:
+      BACKEND_PORT: ${PORT:-8000}
     depends_on:
       - frontend
       - backend

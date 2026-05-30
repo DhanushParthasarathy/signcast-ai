@@ -22,10 +22,11 @@ services:
     environment:
       DATABASE_URL: postgresql+psycopg://postgres:postgres@postgres:5432/signcast
       REDIS_URL: redis://redis:6379/0
+      PORT: ${PORT:-8000}
     env_file:
       - ./backend/.env
     ports:
-      - "8000:8000"
+      - "${PORT:-8000}:${PORT:-8000}"
     volumes:
       - ./backend/app:/app/app
       - ./backend/tests:/app/tests
