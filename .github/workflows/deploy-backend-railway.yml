@@ -1,0 +1,19 @@
+name: Deploy Backend to Railway
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Deploy to Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          npm install --global @railway/cli
+          railway up --service "${{ secrets.RAILWAY_BACKEND_SERVICE }}" --detach

@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: signcast-ai-backend
+    env: docker
+    rootDir: backend
+    plan: starter
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: FRONTEND_ORIGIN
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: signcast-ai-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: signcast-ai-redis
+          property: connectionString
+      - key: NEWS_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: LLM_PROVIDER
+        value: openai
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: ADMIN_API_TOKEN
+        sync: false
+
+  - type: redis
+    name: signcast-ai-redis
+    plan: starter
+    ipAllowList: []
+
+databases:
+  - name: signcast-ai-postgres
+    plan: starter
