@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 
 from app.db.models import SignDictionaryEntry
 from app.schemas.sign import normalize_gloss
-from app.services.sign_sequence import DEFAULT_SIGN_DICTIONARY
 
 
 class DuplicateGlossError(ValueError):
@@ -17,6 +16,8 @@ class SignDictionaryRepository:
     def as_mapping(self) -> dict[str, str]:
         entries = self.db.scalars(select(SignDictionaryEntry)).all()
         if not entries:
+            from app.services.sign_sequence import DEFAULT_SIGN_DICTIONARY
+
             return DEFAULT_SIGN_DICTIONARY
         return {entry.gloss.upper(): entry.video_url for entry in entries}
 
